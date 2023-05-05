@@ -1,0 +1,6 @@
+class StoreShard {
+
+}
+object StoreShard {
+
+}

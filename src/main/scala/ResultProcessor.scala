@@ -12,15 +12,15 @@ class ResultProcessor(context: ActorContext[ResultProcessor.Result]) extends Abs
       context.log.info(s"The Store-Key-Values have $keySize keys")
       Behaviors.stopped
     case HandleGet(key, value) =>
-      context.log.info(s"value of key ${convertToString(key)} is ${convertToString(value)}}")
+      context.log.info(s"value of key ${convertToString(key)} is ${convertToString(value)}")
       Behaviors.stopped
     case HandleSet(key, value) =>
       context.log.info(s"Set key ${convertToString(key)} to ${convertToString(value)}")
       Behaviors.stopped
     case HandleSetMultiple(keyValueList: List[(Seq[Byte], Seq[Byte])]) =>
-      keyValueList.foreach { k =>
+      /*keyValueList.foreach { k =>
         context.log.info(s"Set key ${convertToString(k._1)} to ${convertToString(k._2)}")
-      }
+      }*/
       Behaviors.stopped
     case HandleError(key) =>
       context.log.info(s"value of key ${convertToString(key)} not found")

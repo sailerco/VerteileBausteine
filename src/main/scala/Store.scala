@@ -30,6 +30,7 @@ class Store(context: ActorContext[Store.Command]) extends AbstractBehavior[Store
       replyTo ! HandleSet(key, items(key))
       Behaviors.same
     case SetMultiple(replyTo, keyValues) =>
+      items.addAll(keyValues)
       replyTo ! HandleSetMultiple(keyValues)
       Behaviors.same
     case Register() =>

@@ -1,3 +1,4 @@
+import Client.Count
 import akka.actor.typed.{ActorRef, Behavior}
 import akka.actor.typed.scaladsl.{AbstractBehavior, ActorContext, Behaviors}
 
@@ -17,6 +18,7 @@ class FileReader(context: ActorContext[FileReader.Message], batchSize:Int) exten
         replyTo ! Client.SetMultiple(tupleList)
       }
       scanner.close()
+      replyTo ! Count()
       Behaviors.same
   }
 }
@@ -28,7 +30,7 @@ object FileReader {
 
   def apply(): Behavior[FileReader.Message] = {
     Behaviors.setup { context =>
-      new FileReader(context, batchSize = 7)
+      new FileReader(context, batchSize = 200)
     }
   }
 }

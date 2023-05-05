@@ -5,7 +5,6 @@ import akka.actor.typed.scaladsl.{AbstractBehavior, ActorContext, Behaviors}
 class Client(val store: ActorRef[Store.Command], context: ActorContext[Client.Command]) extends AbstractBehavior[Client.Command](context) {
 
   import Client._
-
   context.self ! Client.Register()
 
   override def onMessage(message: Client.Command): Behavior[Client.Command] = message match {

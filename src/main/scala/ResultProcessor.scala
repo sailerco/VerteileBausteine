@@ -17,11 +17,6 @@ class ResultProcessor(context: ActorContext[ResultProcessor.Result]) extends Abs
     case HandleSet(key, value) =>
       context.log.info(s"Set key ${convertToString(key)} to ${convertToString(value)}")
       Behaviors.stopped
-    case HandleSetMultiple(keyValueList: List[(Seq[Byte], Seq[Byte])]) =>
-      /*keyValueList.foreach { k =>
-        context.log.info(s"Set key ${convertToString(k._1)} to ${convertToString(k._2)}")
-      }*/
-      Behaviors.stopped
     case HandleError(key) =>
       context.log.info(s"value of key ${convertToString(key)} not found")
       Behaviors.stopped
@@ -40,8 +35,6 @@ object ResultProcessor {
   case class HandleGet(key: Seq[Byte], value: Seq[Byte]) extends Result
 
   case class HandleSet(key: Seq[Byte], value: Seq[Byte]) extends Result
-
-  case class HandleSetMultiple(keyValueList: List[(Seq[Byte], Seq[Byte])]) extends Result
 
   case class HandleError(key: Seq[Byte]) extends Result
 

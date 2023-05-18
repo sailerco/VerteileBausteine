@@ -21,3 +21,5 @@ libraryDependencies += "org.slf4j" % "slf4j-simple" % "2.0.7"
 libraryDependencies += "com.typesafe.akka" %% "akka-cluster-typed" % AkkaVersion
 
 libraryDependencies += "com.typesafe.akka" %% "akka-serialization-jackson" % AkkaVersion
+
+libraryDependencies += "com.typesafe.akka" %% "akka-cluster-sharding-typed" % AkkaVersion

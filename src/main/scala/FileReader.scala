@@ -1,24 +1,22 @@
-import Client.Count
 import akka.actor.typed.{ActorRef, Behavior}
 import akka.actor.typed.scaladsl.{AbstractBehavior, ActorContext, Behaviors}
 
 import java.util.Scanner
 import java.io
 
-class FileReader(context: ActorContext[FileReader.Message], batchSize:Int) extends AbstractBehavior[FileReader.Message](context) {
+class FileReader(context: ActorContext[FileReader.Message], batchSize: Int, maxSize: Int) extends AbstractBehavior[FileReader.Message](context) {
 
   import FileReader._
 
   override def onMessage(msg: Message): Behavior[Message] = msg match {
     case File(filename, replyTo) =>
       val scanner = new Scanner(new io.FileReader(filename))
-      while(scanner.hasNext()) {
+      for (_ <- 1 to maxSize if scanner.hasNext()) {
         val line = LazyList.continually(scanner.nextLine().split(",")).takeWhile(_ => scanner.hasNext()).take(batchSize)
         val tupleList = line.map(entry => (entry(0), entry(1))).toList
         replyTo ! Client.SetMultiple(tupleList)
       }
       scanner.close()
-      replyTo ! Count()
       Behaviors.same
   }
 }
@@ -30,7 +28,7 @@ object FileReader {
 
   def apply(): Behavior[FileReader.Message] = {
     Behaviors.setup { context =>
-      new FileReader(context, batchSize = 200)
+      new FileReader(context, batchSize = 1, maxSize = 10)
     }
   }
 }

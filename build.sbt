@@ -23,3 +23,15 @@ libraryDependencies += "com.typesafe.akka" %% "akka-cluster-typed" % AkkaVersion
 libraryDependencies += "com.typesafe.akka" %% "akka-serialization-jackson" % AkkaVersion
 
 libraryDependencies += "com.typesafe.akka" %% "akka-cluster-sharding-typed" % AkkaVersion
+
+// https://mvnrepository.com/artifact/com.thesamet.scalapb/scalapb-runtime
+libraryDependencies += "com.thesamet.scalapb" %% "scalapb-runtime" % "0.11.13"
+// https://mvnrepository.com/artifact/com.thesamet.scalapb/scalapb-runtime-grpc
+libraryDependencies += "com.thesamet.scalapb" %% "scalapb-runtime-grpc" % "0.11.13"
+// https://mvnrepository.com/artifact/io.grpc/grpc-netty
+libraryDependencies += "io.grpc" % "grpc-netty" % "1.55.1"
+
+
+Compile / PB.targets := Seq(
+  scalapb.gen() -> (Compile / sourceManaged).value / "scalapb"
+)

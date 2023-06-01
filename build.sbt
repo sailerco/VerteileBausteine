@@ -35,3 +35,11 @@ libraryDependencies += "io.grpc" % "grpc-netty" % "1.55.1"
 Compile / PB.targets := Seq(
   scalapb.gen() -> (Compile / sourceManaged).value / "scalapb"
 )
+
+val AkkaHttpVersion = "10.5.2"
+libraryDependencies ++= Seq(
+  "com.typesafe.akka" %% "akka-actor-typed" % AkkaVersion,
+  "com.typesafe.akka" %% "akka-stream" % AkkaVersion,
+  "com.typesafe.akka" %% "akka-http" % AkkaHttpVersion
+)
+libraryDependencies += "com.typesafe.akka" %% "akka-http-spray-json" % "10.5.2"

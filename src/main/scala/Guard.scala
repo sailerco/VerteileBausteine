@@ -22,18 +22,18 @@ object Guard {
         case Store.StoreService.Listing(listings) =>
           listings.foreach { ps =>
             new Server(context.system, ps)
+            new HttpServer(ps)
             context.spawnAnonymous(Client(ps))
           }
           Behaviors.same
         case Client.ClientService.Listing(listings) =>
           listings.foreach { ps =>
-            //new Server(ps)
             /*ps ! Client.Set("IT", "Italia")
             ps ! Client.Get("IT")
-            ps ! Client.Get("DE")
+            ps ! Client.Get("DE")*/
             val reader = context.spawnAnonymous(FileReader())
             val filename = "trip_data.csv"
-            reader ! FileReader.File(filename, ps)*/
+            reader ! FileReader.File(filename, ps)
           }
           Behaviors.same
       }

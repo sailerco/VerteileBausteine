@@ -21,9 +21,11 @@ object Guard {
       Behaviors.receiveMessagePartial[Receptionist.Listing] {
         case Store.StoreService.Listing(listings) =>
           listings.foreach { ps =>
-            new Server(context.system, ps)
+            new GrpcServer(context.system, ps)
+            new GrpcClient()
             new HttpServer(ps)
-            context.spawnAnonymous(Client(ps))
+            new HttpClient()
+            //context.spawnAnonymous(Client(ps))
           }
           Behaviors.same
         case Client.ClientService.Listing(listings) =>

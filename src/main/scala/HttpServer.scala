@@ -15,7 +15,6 @@ import spray.json.RootJsonFormat
 import java.nio.charset.StandardCharsets
 import scala.concurrent.duration.DurationInt
 import scala.concurrent.{Await, ExecutionContext, Future}
-import scala.io.StdIn
 
 class HttpServer(store: ActorRef[Store.Command]) {
   implicit val system: ActorSystem[_] = ActorSystem(Behaviors.empty, "HttpServer")
@@ -52,7 +51,7 @@ class HttpServer(store: ActorRef[Store.Command]) {
           val maybeValue: Future[Option[KeyValue]] = getValue(id)
           onSuccess(maybeValue) {
             case Some(keyValue) => complete(keyValue.value)
-            case None => complete(StatusCodes.NotFound, "404 ERROR - Key was not found")
+            case None => complete(StatusCodes.NotFound)
           }
         }
       },
@@ -69,10 +68,6 @@ class HttpServer(store: ActorRef[Store.Command]) {
     )
   val bindingFuture: Future[Http.ServerBinding] = Http().newServerAt("localhost", 8080).bind(route)
   println(s"Server online at http://localhost:8080/\nPress RETURN to stop...")
-  StdIn.readLine()
-  bindingFuture
-    .flatMap(_.unbind())
-    .onComplete(_ => system.terminate())
 
   private def convertToString(value: Seq[Byte]): String = {
     new String(value.toArray, StandardCharsets.UTF_8)

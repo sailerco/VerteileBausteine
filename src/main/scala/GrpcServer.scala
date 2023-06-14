@@ -40,7 +40,7 @@ class ServerImpl(system: ActorSystem[_], store: ActorRef[Store.Command]) extends
   }
 }
 
-class Server(system: ActorSystem[_], store: ActorRef[Store.Command]) {
+class GrpcServer(system: ActorSystem[_], store: ActorRef[Store.Command]) {
   val logger: Logger = Logger.getLogger(this.getClass.getName)
   val port = 50051
   val host = "localhost"
@@ -53,5 +53,4 @@ class Server(system: ActorSystem[_], store: ActorRef[Store.Command]) {
     .start()
 
   logger.info("server started, listening on port" + port)
-  //server.awaitTermination()
 }

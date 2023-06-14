@@ -3,7 +3,12 @@ import io.grpc.ManagedChannelBuilder
 
 import java.util.logging.Logger
 
-object GrpcClient extends App {
+trait StoreClient {
+  def get(key: String, action: Option[String] => Unit): Unit
+  def set(key: String, value: String): Unit
+}
+
+class GrpcClient extends StoreClient {
   val logger = Logger.getLogger(Client.getClass.getName)
   val port = 50051
   val host = "localhost"
@@ -13,32 +18,26 @@ object GrpcClient extends App {
     .asInstanceOf[ManagedChannelBuilder[_]]
     .build()
 
-  set("IT", "Italy")
-  set("DE", "Germany")
-  get("IT")
-  get("UK")
+  new Demo(this)
 
-  def set(key: String, value: String): Unit = {
+  override def set(key: String, value: String): Unit = {
     val request = SetRequest(key, value)
-
     logger.info("try to set " + request.key + " with " + request.value)
-
     val reply = GrpcClientGrpc
       .blockingStub(channel)
       .set(request)
-    logger.info(reply.toProtoString)
+    println("key-value-pair was created")
+    logger.info(reply.value)
   }
-
-  def get(key: String): Unit = {
+  override def get(key: String, action: Option[String] => Unit): Unit = {
     val getRequest = GetRequest(key)
-    logger.info("try to get " + getRequest.key)
-
     val get = GrpcClientGrpc
       .blockingStub(channel)
       .get(getRequest)
-    logger.info(get.toProtoString)
 
     if (get.getValue == "")
-      logger.info(s"there is no value for key $key")
+      action(None)
+    else
+      action(Option(get.value.get))
   }
 }
